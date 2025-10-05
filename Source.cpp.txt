@@ -1,0 +1,258 @@
+
+
+#include<iostream>
+#include<string>
+#include<stdlib.h>
+#include <fstream>
+using namespace std;
+
+
+const int MaxSize = 2000;
+string Name[MaxSize];
+int MobNumber[MaxSize];
+int HomeNumber[MaxSize];
+string Email[MaxSize];
+string Address[MaxSize];
+
+int NumberOfContact;
+bool DataSaved = true;
+void LoadData()
+{
+	string line;
+	ifstream myfile("Info.txt");
+	if (myfile.is_open())
+	{
+		getline(myfile, line);
+
+		NumberOfContact = atoi(line.c_str());
+		for (int i = 0; i<NumberOfContact; i++)
+		{
+			
+			getline(myfile, line);
+			Name[i]=line;
+			getline(myfile, line);
+			Email[i]=line;
+			getline(myfile, line);
+			Address[i]=line;
+			getline(myfile, line);
+			int aa = atoi(line.c_str());
+			MobNumber[i]=aa;
+			getline(myfile, line);
+			aa = atoi(line.c_str());
+			HomeNumber[i]=aa;
+			
+
+		}
+
+		myfile.close();
+	}
+
+	else cout << "Unable to open file";
+}
+void AddNewContact()
+{
+	string t;
+	if (NumberOfContact<MaxSize)
+	{
+
+		getline(cin, t);
+		cout << "Enter Name :";
+		getline(cin, Name[NumberOfContact]);
+	
+		cout << "Enter Email :";
+		getline(cin, Email[NumberOfContact]);
+		 
+		cout << "Enter Address :";
+		getline(cin, Address[NumberOfContact]);
+		
+		cout << "Enter Home Number :";
+		int a;
+		cin >> a;
+		HomeNumber[NumberOfContact]=a;
+
+		cout << "Enter Mobile Number :";
+		cin >> a;
+		MobNumber[NumberOfContact] = a;
+		NumberOfContact++;
+		DataSaved = false;
+	}
+	else
+		cout << "Phone Book full";
+}
+void DisplayAll()
+{
+	for (int i = 0; i<NumberOfContact; i++)
+	{
+		cout << "Contact Number :" << i + 1 << endl;
+		cout << endl;
+		cout << "Name : " << Name[i] << endl;
+		cout << "Email : " << Email[i] << endl;
+		cout << "Address : " << Address[i] << endl;
+		cout << "Home Number : " << HomeNumber[i] << endl;
+		cout << "Mobile Number : " << MobNumber[i] << endl;
+		cout << "************************************************" << endl;
+	}
+}
+void Display(int i)
+{
+	
+	
+		cout << "Contact Number :" << i + 1 << endl;
+		cout << endl;
+		cout << "Name : " << Name[i] << endl;
+		cout << "Email : " << Email[i] << endl;
+		cout << "Address : " << Address[i] << endl;
+		cout << "Home Number : " << HomeNumber[i] << endl;
+		cout << "Mobile Number : " << MobNumber[i] << endl;
+		cout << "************************************************" << endl;
+	
+}
+void SaveData()
+{
+	ofstream myfile("Info.txt");
+	if (myfile.is_open())
+	{
+		myfile << NumberOfContact << "\n";
+		for (int i = 0; i<NumberOfContact; i++)
+		{
+			myfile << Name[i] << "\n";
+			myfile << Email[i] << "\n";
+			myfile << Address[i] << "\n";
+			myfile << MobNumber[i] << "\n";
+			myfile << HomeNumber[i] << "\n";
+
+		}
+		DataSaved = true;
+		myfile.close();
+	}
+	else cout << "Unable to open file";
+}
+void Edit(int Loc)
+{
+	Display(Loc);
+
+	string t;
+	getline(cin, t);
+	cout << "Enter Name :";
+	getline(cin, Name[Loc]);
+
+	cout << "Enter Email :";
+	getline(cin, Email[Loc]);
+
+	cout << "Enter Address :";
+	getline(cin, Address[Loc]);
+	
+	cout << "Enter Home Number :";
+	int a;
+	cin >> a;
+	HomeNumber[Loc] = a;
+
+	cout << "Enter Mobile Number :";
+	cin >> a;
+	MobNumber[Loc] = a;
+	DataSaved = false;
+}
+int Search(string t)
+{
+	for (int i = 0; i<NumberOfContact; i++)
+	if (Name[i].compare(t) == 0)
+		return i;
+	return -1;
+}
+int main()
+{
+	
+	LoadData();
+	int Loc;
+	string t;
+	int Sel;
+	cout << "*****************************Phone Book********************************" << endl;
+	cout << "********************** ***********************" << endl;
+	cout << "***********************************************************************" << endl;
+	do {
+		cout << endl << endl;
+		cout << "1-Add new Information" << endl;
+		cout << "2-Edit Infromation" << endl;
+		cout << "3-Delete Infromation" << endl;
+		cout << "4-Search" << endl;
+		cout << "5-Display all Infromation" << endl;
+		cout << "6-Save data" << endl;
+		cout << "7-exit" << endl;
+		cout << "Select a number Please ";
+		cin >> Sel;
+		switch (Sel)
+		{
+		case 1:
+			AddNewContact();
+			break;
+		case 2:
+			getline(cin, t);
+			cout << endl << "Enter Name to search " << endl;
+			getline(cin, t);
+
+			Loc = Search(t);
+			if (Loc == -1)
+				cout << "Name Not Found" << endl;
+			else
+			{
+				Edit(Loc);
+			}
+
+			DataSaved = false;
+			break;
+		case 3:
+			getline(cin, t);
+			cout << endl << "Enter Name to search " << endl;
+			getline(cin, t);
+
+			Loc = Search(t);
+			if (Loc == -1)
+				cout << "Name Not Found" << endl;
+			else
+			{
+				for (int i = Loc; i < NumberOfContact; i++)
+				{
+					Name[i] = Name[i + 1];
+					MobNumber[i] = MobNumber[i + 1];
+					HomeNumber[i] = HomeNumber[i + 1];
+					Email[i] = Email[i + 1];
+					Address[i] = Address[i + 1];
+				}
+
+				
+			}
+			NumberOfContact--;
+			DataSaved = false;
+			break;
+		case 4:
+			getline(cin, t);
+			cout << endl << "Enter Name to search " << endl;
+			getline(cin, t);
+
+			Loc = Search(t);
+			if (Loc == -1)
+				cout << "Name Not Found" << endl;
+			else
+				Display(Loc);
+			break;
+		case 5:
+			DisplayAll();
+			break;
+		case 6:
+			SaveData();
+			break;
+		case 7:
+			if (!DataSaved)
+			{
+				cout << "do you want to save change(y/n)";
+				char x;
+				cin >> x;
+				if (x == 'y' || x == 'Y')
+					SaveData();
+			}
+			break;
+		}
+	} while (Sel != 7);
+
+	return 0;
+}
